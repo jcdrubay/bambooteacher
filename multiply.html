@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+            .pass {
+                background-color: greenyellow;
+            }
+            .fail {
+                background-color: red;
+            }
+    </style>
+</head>
+<body>
+
+    <div id="config">
+        Table Min: <input id="table_min" value="3"/> Table Max: <input id="table_max" value="3"/> Niveau: <input id="level" value="3"/>
+    </div>
+    <div id="ask">
+        <span id="x">1</span> x <span id="y">1</span> = <input id="input" onkeyup="check_result()">
+    </div>
+    <div id="answer">
+
+    </div>
+
+    <div id="results">
+        Strength: <span id="strength">0</span> / 100
+    </div>
+
+</body>
+
+<script>
+    blue = 'rgb(43, 124, 195 )'
+    white = 'rgb(256, 256, 256 )'
+    grey = 'rgb(114, 114, 114 )'
+    max_points = 40
+    var count = 0;
+    var points = 0;
+    var strength = 0;
+    var state = 'ask';
+    var timer;
+
+    function update_results(result, text){
+        document.getElementById("answer").innerHTML = text
+        document.getElementById("answer").className = result
+        document.getElementById("strength").innerHTML = strength
+
+    }
+
+
+    function set_calculation(){
+        table_min = parseInt(document.getElementById("table_min").value)
+        table_max = parseInt(document.getElementById("table_max").value)
+        x = table_min + Math.round((Math.random() * (table_max - table_min)))
+        if (count <= 10){
+            y = count
+        } else if (count <= 20) {
+            y = 20 - count
+        } else if (count <= 25) {
+            y = 2 * (count - 20)
+        } else if (count <= 30) {
+            y = 9 - (2 * (count - 26))
+        } else {
+            y = Math.round(Math.random() * 10)
+        }
+
+        document.getElementById("x").innerHTML = x
+        document.getElementById("y").innerHTML = y
+
+        document.getElementById("input").readOnly = false;
+        document.getElementById("input").value = ''
+
+        timer = Date.now()
+
+        count += 1
+    };
+
+    function check_result(){
+        if (event && event.which != 13 && event.keyCode != 13) {
+            return true;
+        }
+
+        if (state == 'ask'){
+            x = parseInt(document.getElementById("x").innerHTML)
+            y = parseInt(document.getElementById("y").innerHTML)
+            input = parseInt(document.getElementById("input").value)
+            level = parseInt(document.getElementById("level").value)
+
+            console.log(x)
+            console.log(y)
+            console.log(input)
+
+            if ( x * y == input) {
+                duration = Date.now() - timer
+
+                full_points = 8 - level
+                no_point = full_points * 2
+
+                new_points = (
+                    Math.max((no_point - duration / 1000), 0)
+                    / (no_point - full_points)
+                )
+
+                result = 'pass'
+                text = "Bravo!"
+
+                console.log("New points: " + new_points)
+                points = points + new_points
+            } else {
+                result = 'fail'
+                text = "Oups! The correct answer is: " + (x * y)
+                points = points - Math.min(1, points)
+            }
+
+
+            console.log('points: ' + points)
+            strength = Math.min(Math.round(points * 100 / max_points))
+            console.log('strength: ' + strength)
+
+            update_results(result, text)
+            document.getElementById("input").readOnly = true;
+            state = 'answer'
+        } else {
+            set_calculation();
+            state = 'ask'
+        }
+        console.log("state: " + state)
+    };
+
+
+    set_calculation();
+
+
+</script>
+</html>
