@@ -2,50 +2,255 @@
 <html>
 <head>
     <style>
+
+            body {
+                text-align: center;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+            }
+
+            #header {
+                font-size: 25px;
+            }
+            #header, #footer {
+                background-color: rgb(78, 170, 250);
+                padding: 20px;
+            }
+
+            input {
+                width: 70px;
+                padding: 12px 20px;
+                margin: 8px 0;
+                border-radius: 8px;
+                font-family: Verdana, Geneva, Tahoma, sans-serif;
+                font-size: 28px;
+
+            }
+            input:focus {
+                border: 3px solid rgb(50,150,250);
+                border-radius: 8px;
+            }
+
+
+            #change, #confirm{
+                padding: 20px;
+            }
+
+            #change {
+                display: block;
+            }
+
+            #confirm {
+                display: noe;
+            }
+
+            #config {
+                padding: 20px;
+                background-color: #CCCCCC;
+            }
+
+            #config_detail {
+                display: none;
+            }
+
+            #ask {
+                padding:30px;
+                font-size: 28px;
+            }
+
+            #congrats {
+                position: fixed; /* Sit on top of the page content */
+                width: 100%; /* Full width (cover the whole page) */
+                height: 100%; /* Full height (cover the whole page) */
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+                z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+                cursor: pointer; /* Add a pointer on hover */
+            }
+
+            #table {
+                margin-left:auto;
+                margin-right:auto;
+                border-collapse: collapse;
+
+            }
+
+            #table th  {
+                font-weight: bold;
+            }
+
+            #table th, #table td  {
+                padding: 10px;
+                text-align: center;
+            }
+            #table tr {
+                border-bottom: 1px solid #ddd;
+            }
+
+            #tbody tr:hover {
+                border: solid 2px #666666;
+            }
+
+
             .pass {
                 background-color: greenyellow;
             }
             .fail {
                 background-color: red;
             }
+
+            a {
+                color: black;
+                text-decoration: none;
+            }
+
+            .button {
+                background-color: greenyellow;
+                padding: 10px;
+                border-radius: 8px;
+            }
+
+            .var {
+                color: blue;
+                font-weight: bold;
+            }
+
     </style>
 </head>
 <body>
 
+    <div id="header">
+        Multiplication Tables
+    </div>
     <div id="config">
-        Table Min: <input id="table_min" value="3"/> Table Max: <input id="table_max" value="3"/> Niveau: <input id="level" value="3"/>
+        <div id="what" style="color: deeppink;"></div>
+        <div id="change" style="display: block;">
+            <span onclick="toggle_config()" class="button">change</span>
+        </div>
+        <div id="config_detail">
+            Table Min<br/>
+            <input id="table_min" value="3" type="number" min="1" max="9" onchange="update_config()" /><br/><br/>
+            Table Max<br/>
+            <input id="table_max" value="3"  type="number" min="1" max="9" onchange="update_config()"/><br/><br/>
+            Level<br/><input id="level" value="3"  type="number" min="1" max="7"  onchange="update_config()"/><br/>
+            <div id=confirm>
+                <span onclick="toggle_config()" class="button">Let's go!</span>
+            </div>
+        </div>
     </div>
     <div id="ask">
-        <span id="x">1</span> x <span id="y">1</span> = <input id="input" onkeyup="check_result()">
+        <span id="x">1</span> x <span id="y">1</span> = <input id="input" onkeyup="check_result()"  type="number">
+        <span id="check" style="display: inline;" onclick="check_result(true)" class="button">Check</span>
+        <span id="next" style="display: none;" onclick="check_result(true)" class="button">Next</span>
     </div>
-    <div id="answer">
-
+    <div id="congrats" style="display:none;">
+        <video width="50%" height="50%" autoplay loop muted>
+            <source src="https://media.giphy.com/media/cuHjncTuHW40g/giphy.mp4" type="video/mp4"/>
+        </video>
     </div>
 
     <div id="results">
-        Strength: <span id="strength">0</span> / 100
+        <table id="table">
+            <th>Count</th>
+            <th>Multiplication</th>
+            <th>Strenght %</th>
+            <th>Speed (sec)</th>
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+
+    <div id="footer">
+            <br/>
+        <a href="https://github.com/jcdrubay/eduk">
+
+                see the code<br/>
+                fork<br/>
+                improve<br/>
+                submit merge request<br/>
+            <img src="https://github.githubassets.com/favicon.ico" /></a>
     </div>
 
 </body>
 
 <script>
-    blue = 'rgb(43, 124, 195 )'
-    white = 'rgb(256, 256, 256 )'
-    grey = 'rgb(114, 114, 114 )'
-    max_points = 40
+    const max_points = 40;
+    var table_min;
+    var table_max;
+    var level;
     var count = 0;
     var points = 0;
     var strength = 0;
     var state = 'ask';
     var timer;
+    var icongrat = 0;
 
-    function update_results(result, text){
-        document.getElementById("answer").innerHTML = text
-        document.getElementById("answer").className = result
-        document.getElementById("strength").innerHTML = strength
+    function get_table_min(){
+        return parseInt(document.getElementById("table_min").value)
+    }
+
+    function get_table_max(){
+        return parseInt(document.getElementById("table_max").value)
+    }
+
+    function get_level(){
+        return parseInt(document.getElementById("level").value)
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function toggle_display(element_id, display_type='block'){
+        el_display = document.getElementById(element_id).style.display
+        if (el_display == display_type){
+            new_display = 'none';
+        } else {
+            new_display = display_type;
+        }
+        document.getElementById(element_id).style.display = new_display
+    }
+
+    function toggle_config(){
+        toggle_display('change')
+        toggle_display('config_detail')
+    }
+
+    function update_config(){
+        table_min = get_table_min()
+        table_max = get_table_max()
+        level = get_level()
+        document.getElementById("what").innerHTML = (
+            `Learning the tables from <span class="var">${table_min}</span> `
+            + `to <span class="var">${table_max}</span> with `
+            + `level <span class="var">${level}</span>.`
+        )
+    }
+
+    function update_results(result, text, duration){
+        inner = document.getElementById("tbody").innerHTML
+        inner = (
+            `<tr>`
+            + `<td>${count}</td>`
+            + `<td class="${result}">${text}</td>`
+            + `<td>${strength}%</td>`
+            + `<td>${Math.round(duration)}</td>`
+            + `</tr>`
+        ) + inner
+        document.getElementById("tbody").innerHTML = inner
 
     }
 
+    async function congrats(){
+        if (icongrat >= 10) {
+            toggle_display('congrats')
+            await sleep(5000);
+            toggle_display('congrats')
+            icongrat = 0
+        }
+        icongrat += 1
+    }
 
     function set_calculation(){
         table_min = parseInt(document.getElementById("table_min").value)
@@ -74,8 +279,9 @@
         count += 1
     };
 
-    function check_result(){
-        if (event && event.which != 13 && event.keyCode != 13) {
+    function check_result(force=false){
+        console.log(force)
+        if (!force && event && event.which != 13 && event.keyCode != 13) {
             return true;
         }
 
@@ -89,14 +295,13 @@
             console.log(y)
             console.log(input)
 
+            duration = (Date.now() - timer) / 1000
             if ( x * y == input) {
-                duration = Date.now() - timer
-
                 full_points = 8 - level
                 no_point = full_points * 2
 
                 new_points = (
-                    Math.max((no_point - duration / 1000), 0)
+                    Math.max(no_point - duration, 0)
                     / (no_point - full_points)
                 )
 
@@ -105,28 +310,36 @@
 
                 console.log("New points: " + new_points)
                 points = points + new_points
+
+                congrats()
+
             } else {
                 result = 'fail'
-                text = "Oups! The correct answer is: " + (x * y)
-                points = points - Math.min(1, points)
+                points = points - 0.2 * points
             }
 
+
+
+            text = `${x} x ${y} = ${x * y}`
 
             console.log('points: ' + points)
             strength = Math.min(Math.round(points * 100 / max_points))
             console.log('strength: ' + strength)
 
-            update_results(result, text)
+            update_results(result, text, duration)
             document.getElementById("input").readOnly = true;
             state = 'answer'
         } else {
             set_calculation();
+            document.getElementById("input").focus();
             state = 'ask'
         }
-        console.log("state: " + state)
+        toggle_display('check', 'inline')
+        toggle_display('next', 'inline')
+
     };
 
-
+    update_config();
     set_calculation();
 
 
