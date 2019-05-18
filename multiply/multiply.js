@@ -61,7 +61,7 @@ function start(){
 function update_results(result, text, duration){
     inner = document.getElementById("tbody").innerHTML
     th_width = document.getElementById("th-strength").clientWidth
-    arrow_width = 2 * 20  // why we have to double the width of the arrow :/
+    arrow_width = 20
     gauge_level = Math.round(
         (th_width - arrow_width) * Math.min(strength, 100) / 100
     )
