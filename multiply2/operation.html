@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="header">
+        Multiplications with multiple digits
+    </div>
+
+    <div id="ask">
+        <table id="operation_table"></table>
+        <br/>
+        <span id="check" style="display: inline;" onclick="check_result(true)" class="button">Check</span>
+        <span id="next" style="display: none;" onclick="check_result(true)" class="button">Next</span>
+    </div>
+    <div id="congrats" style="display:none;">
+        <video width="50%" height="50%" autoplay loop muted>
+            <source src="https://media.giphy.com/media/cuHjncTuHW40g/giphy.mp4" type="video/mp4"/>
+        </video>
+    </div>
+
+    <div id="results">
+        <table id="table">
+            <th>Count</th>
+            <th>Multiplication</th>
+            <th>Correctness</th>
+            <th>Speed (sec)</th>
+            <th id="th-strength">Strength</th>
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+    <div id="config">
+            <div id="what" style="color: deeppink;"></div>
+            <div id="change" style="display: block;">
+                <span onclick="toggle_config()" class="button">change</span>
+            </div>
+            <div id="config_detail">
+                Level<br/><input id="level" value="3"  type="number" min="1" max="7"  onchange="update_config()"/><br/>
+                <div id=confirm>
+                    <span onclick="start()" class="button">Let's go!</span>
+                </div>
+            </div>
+        </div>
+    <div id="footer">
+            <br/>
+        <a href="https://github.com/jcdrubay/eduk">
+
+                see the code<br/>
+                fork<br/>
+                improve<br/>
+                submit merge request<br/>
+            <img src="https://github.githubassets.com/favicon.ico" /></a>
+    </div>
+
+</body>
+
+<script src="./operation.js"></script>
+
+</html>
