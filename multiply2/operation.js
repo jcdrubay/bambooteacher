@@ -63,7 +63,7 @@ function update_results(result, text, correctness, duration){
         + `<td>${Math.round(duration)}</td>`
         + `<td class="td-strength">`
         + `    <div style="width:100%;position:relative;">`
-        + `        <img class="arrow" style="left:${gauge_level}%" src="./arrow.png" />`
+        + `        <img class="arrow" style="left:${gauge_level}%" src="../img/arrow.png" />`
         + `    </div>`
         + `</td>`
         + `</tr>`
