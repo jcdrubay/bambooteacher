@@ -126,7 +126,7 @@ a {
 
 #table .td-strength {
     /* background-image: linear-gradient(to right, red, yellow, #95e618); */
-    background-image: url("./gauge.png");
+    background-image: url("../img/gauge.png");
     padding: 0px;
     text-align: left;
     background-size: cover;
