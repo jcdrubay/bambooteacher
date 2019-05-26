@@ -100,13 +100,32 @@ function get_inputs(){
 
 
 function set_calculation(){
+
+    level = get_level()
+
     x1 = Math.round(Math.random() * 9)
-    x2 = Math.round(Math.random() * 9)
+    if (level >= 4){
+        x2 = Math.round(Math.random() * 9)
+    } else if (level == 3) {
+        x2 = 2
+    } else if (level == 2) {
+        x2 = 1
+    } else {
+        x2 = 0
+    }
     y1 = Math.round(Math.random() * 9)
     y2 = Math.round(Math.random() * 9)
 
     tbody = `
     <tbody>
+    <tr class="retenues">
+        <td><input value="0" type="number" min="0" max="9" tabindex="4"/></td>
+        <td><input value="0" type="number" min="0" max="9" tabindex="4"/></td>
+        <td><input value="0" type="number" min="0" max="9" tabindex="4"/></td>
+        <td><input value="0" type="number" min="0" max="9" tabindex="4"/></td>
+        <td></td>
+    </tr>
+
     <tr>
         <td></td>
         <td></td>
@@ -124,25 +143,25 @@ function set_calculation(){
     <tr class="separator"><td colspan="5">&nbsp;</td></tr>
     <tr>
         <td></td>
-        <td><input id="a4" value="0" type="number" min="1" max="9" tabindex="4"/>
-        <td><input id="a3" value="0" type="number" min="1" max="9" tabindex="3"/>
-        <td><input id="a2" value="0" type="number" min="1" max="9" tabindex="2"/>
-        <td><input id="a1" value="0" type="number" min="1" max="9" tabindex="1"/>
+        <td><input id="a4" value="0" type="number" min="0" max="9" tabindex="4"/>
+        <td><input id="a3" value="0" type="number" min="0" max="9" tabindex="3"/>
+        <td><input id="a2" value="0" type="number" min="0" max="9" tabindex="2"/>
+        <td><input id="a1" value="0" type="number" min="0" max="9" tabindex="1"/>
     </tr>
     <tr>
         <td>+</td>
-        <td><input id="b4" value="0" type="number" min="1" max="9" tabindex="8"/>
-        <td><input id="b3" value="0" type="number" min="1" max="9" tabindex="7"/>
-        <td><input id="b2" value="0" type="number" min="1" max="9" tabindex="6"/>
-        <td><input id="b1" value="0" type="number" min="1" max="9" tabindex="5"/>
+        <td><input id="b4" value="0" type="number" min="0" max="9" tabindex="8"/>
+        <td><input id="b3" value="0" type="number" min="0" max="9" tabindex="7"/>
+        <td><input id="b2" value="0" type="number" min="0" max="9" tabindex="6"/>
+        <td><input id="b1" value="0" type="number" min="0" max="9" tabindex="5"/>
     </tr>
     <tr class="separator"><td colspan="5">&nbsp;</td></tr>
     <tr>
         <td>=</td>
-        <td><input id="c4" value="0" type="number" min="1" max="9" tabindex="12"/>
-        <td><input id="c3" value="0" type="number" min="1" max="9" tabindex="11"/>
-        <td><input id="c2" value="0" type="number" min="1" max="9" tabindex="10"/>
-        <td><input id="c1" value="0" type="number" min="1" max="9" tabindex="9"/>
+        <td><input id="c4" value="0" type="number" min="0" max="9" tabindex="12"/>
+        <td><input id="c3" value="0" type="number" min="0" max="9" tabindex="11"/>
+        <td><input id="c2" value="0" type="number" min="0" max="9" tabindex="10"/>
+        <td><input id="c1" value="0" type="number" min="0" max="9" tabindex="9"/>
     </tr>
     </tbody>
     `
@@ -191,9 +210,9 @@ function check_result(force=false){
         b2 = parseInt(document.getElementById("b2").value)
         b3 = parseInt(document.getElementById("b3").value)
         b4 = parseInt(document.getElementById("b4").value)
-        c1 = parseInt(document.getElementById("c1").value)
-        c2 = parseInt(document.getElementById("c2").value)
-        c3 = parseInt(document.getElementById("c3").value)
+        c1 = parseInt(document.getElementById("c1").value) || 0
+        c2 = parseInt(document.getElementById("c2").value) || 0
+        c3 = parseInt(document.getElementById("c3").value) || 0
         c4 = parseInt(document.getElementById("c4").value) || 0
 
 
